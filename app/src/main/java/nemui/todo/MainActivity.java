@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
 
                 EditText editText = (EditText)findViewById(R.id.editText);
                 String text = editText.getText().toString();
+
                 adapter.add(text);
                 System.out.println(text);
                 editText.getText().clear();
