@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         list = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         view.setAdapter(adapter);
-//        list.add("んごすぎ");
+//        list.add("んごごごごごごすぎ");
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
