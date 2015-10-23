@@ -1,10 +1,14 @@
 package nemui.todo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,33 +26,58 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //起動時にソフトキーボードを表示しない
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         setContentView(R.layout.activity_main);
 
 
         view = (ListView) findViewById(R.id.listView);
         list = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, list);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         view.setAdapter(adapter);
-//        list.add("んご");
 //        list.add("んごすぎ");
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                EditText editText = (EditText)findViewById(R.id.editText);
-                String text = editText.getText().toString();
-
-                adapter.add(text);
-                System.out.println(text);
-                editText.getText().clear();
-
+                onEnter();
             }
         });
 
+        EditText editText1=(EditText)findViewById(R.id.editText);
+        editText1.setOnKeyListener(new View.OnKeyListener(){
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN
+                        && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    onEnter();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
+
+    public void onEnter() {
+
+        EditText editText = (EditText) findViewById(R.id.editText);
+        String text = editText.getText().toString();
+
+
+        adapter.add(text);
+
+        InputMethodManager imm
+                = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow //ソフトキーボードを隠す
+                (editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+        System.out.println(text);
+        editText.getText().clear();
+    }
+
 
 
     @Override
