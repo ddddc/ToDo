@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 
 
@@ -27,7 +29,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //起動時にソフトキーボードを表示しない
+        // hide keyboard at start
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.activity_main);
@@ -66,8 +68,10 @@ public class MainActivity extends Activity {
         EditText editText = (EditText) findViewById(R.id.editText);
         String text = editText.getText().toString();
 
-
-        adapter.add(text);
+        // add text if it is not empty
+        if(StringUtils.isNotEmpty(text)){
+            adapter.add(text);
+        };
 
         InputMethodManager imm
                 = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
