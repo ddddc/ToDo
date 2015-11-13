@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,17 +30,43 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // hide keyboard at start
+        //起動時にソフトキーボードを表示しない
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         setContentView(R.layout.activity_main);
 
-
         view = (ListView) findViewById(R.id.listView);
         list = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+
+        //Androidフレームワーク標準のレイアウト
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, list);
         view.setAdapter(adapter);
-//        list.add("んごごごごごごすぎ");
+
+        //listView内の初期表示
+        list.add("んご");
+        list.add("んごごごごごごすぎ");
+
+
+        /* ※※※※※※ ワンクリックでなんかできるけどとりあえず使わない ※※※※※※
+        //リストの行をクリックした時のイベントリスナーを作る。
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //ここに処理を書く
+            }
+        });
+        */
+
+        //リストの行を長押しした時のイベントリスナーを作る。
+        view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //ここに処理を書く
+                list.remove(position); //listから消す
+                adapter.notifyDataSetChanged(); //これがないとエラーになるっぽい
+                return false;
+            }
+        });
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +76,7 @@ public class MainActivity extends Activity {
             }
         });
 
+        //Enterキーを押すとExitTextの入力内容を送信(+ボタンを押すのと同じ)
         EditText editText1=(EditText)findViewById(R.id.editText);
         editText1.setOnKeyListener(new View.OnKeyListener(){
             @Override
@@ -79,6 +107,8 @@ public class MainActivity extends Activity {
                 (editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         System.out.println(text);
+
+        //入力後にEditTextの中身をclear
         editText.getText().clear();
     }
 
